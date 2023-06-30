@@ -10,24 +10,45 @@ export default {
         const month = today.getMonth() + 1;
         const day = today.getDate();
 
-        const url = "https://jsonplaceholder.typicode.com/posts";
-        let total = ref(0);
-        let parkedCar = ref(0);
+        const parkingUrl = "https://jsonplaceholder.typicode.com/posts";
+        const yearUrl = "https://jsonplaceholder.typicode.com/posts";
+        let parkingList = ref([]);
+        let accumulationList = ref([]);
 
         setInterval(() => {
             axios
-                .get(url)
+                .get(parkingUrl)
                 .then(res => {
-                    const carPark = res.data.find(item => item.id === 2);
-                    total.value = carPark?.body.length;                         //주차장 면수
-                    parkedCar.value = Math.floor(Math.random() * 100);          //주차대수
+                    const carParkList = res.data.filter(item => item.id <= 10);
+                    parkingList.value = carParkList.map(item => {
+                        return {
+                            title: `주차장 ${item.id}`,
+                            parkingtotalCnt: item.body.length,
+                            parkedCar: Math.floor(Math.random() * 100)
+                        }
+                    });
                 })
                 .catch(err => console(err));
         }, 1000)
 
+        onMounted(() => {
+            axios
+                .get(yearUrl)
+                .then(res => {
+                    const yearParked = res.data.filter(item => item.id <= 10);
+                    accumulationList.value = yearParked.map(item => {
+                        return {
+                            title: `주차장 ${item.id}`,
+                            accumulation: item.body.length
+                        }
+                    });
+                })
+                .catch(err => console(err));
+        })
+
         return {
             today, year, month, day,
-            total, parkedCar
+            parkingList, accumulationList,
         }
     }
 }
@@ -37,42 +58,47 @@ export default {
     <div class="layout">
         <div class="aside">
             <img src="@/assets/images/logo.png" />
-            <div class="text-h5 text-weight-bold text-dark">Bmijin</div>
-            <div class="asideText">ddd</div>
-            <div class="asideText">fff</div>
+            <div class="text-h5 text-weight-bold text-dark q-mb-lg">Bmijin</div>
+            <div class="asideText">메뉴 1</div>
+            <div class="asideText">메뉴 2</div>
         </div>
         <div class="main">
             <div>
-                <div class="text-h5 q-pl-xl q-pt-md text-weight-bold text-white">{{ year }}년 {{ month }}월 {{ day }}일</div>
+                <div class="text-h5 q-pl-xl q-pt-xl text-weight-bold text-white">{{ year }}년 {{ month }}월 {{ day }}일</div>
                 <div>
                     <!--카드-->
 
-                    <q-card flat bordered class="my-card q-ma-xl bg-warning">
-                        <q-card-section>
-                            <div class="text-h6 text-weight-bold text-dark">주차장 1 </div>
-                        </q-card-section>
+                    <div class="row q-pt-lg">
+                        <q-card flat bordered class="my-card q-ma-xl bg-warning" v-for="item in parkingList">
+                            <q-card-section>
+                                <div class="text-h6 text-weight-bold text-dark">{{ item.title }}</div>
+                            </q-card-section>
 
-                        <q-separator inset />
+                            <q-separator inset />
 
-                        <q-card-section class="text-subtitle2 text-dark">
-                            담당 전화번호: 010-1234-5678<br />
-                            주소 : 대한민국<br />
-                            (신주소 : ㅇㅇ로)<br />
-                            <div class="text-subtitle2 q-mt-sm text-dark text-weight-bold text-right">주차장 면수 : {{ total }}</div>
-                            <div class="row justify-between">
-                                <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-dark">
-                                    <div class="text-subtitle2 text-warning text-weight-bold">주차 차량 수</div>
-                                    <q-separator dark />
-                                    <div class="text-subtitle2 text-warning text-weight-bold text-right">{{ parkedCar }}</div>
-                                </q-card>
-                                <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-dark">
-                                    <div class="text-subtitle2 text-warning text-weight-bold">주차 가능 수</div>
-                                    <q-separator dark />
-                                    <div class="text-subtitle2 text-warning text-weight-bold text-right">{{ total - parkedCar }}</div>
-                                </q-card>
-                            </div>
-                        </q-card-section>
-                    </q-card>
+                            <q-card-section class="text-subtitle2 text-dark">
+                                담당 전화번호: 010-1234-5678<br />
+                                주소 : 대한민국<br />
+                                (신주소 : ㅇㅇ로)<br />
+                                <div class="text-subtitle2 q-mt-sm text-dark text-weight-bold text-right">주차면수 : {{ item.parkingtotalCnt }}</div>
+                                <div class="row justify-between">
+                                    <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-dark">
+                                        <div class="text-subtitle2 text-warning text-weight-bold">주차 차량 수</div>
+                                        <q-separator dark />
+                                        <div class="text-subtitle2 text-warning text-weight-bold text-right">{{ item.parkedCar }}</div>
+                                    </q-card>
+                                    <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-dark">
+                                        <div class="text-subtitle2 text-warning text-weight-bold">주차 가능 수</div>
+                                        <q-separator dark />
+                                        <div class="text-subtitle2 text-warning text-weight-bold text-right">{{ item.parkingtotalCnt - item.parkedCar }}</div>
+                                    </q-card>
+                                </div>
+                            </q-card-section>
+                                <div class="text-subtitle text-center text-dark">
+                                    1년 누적 주차대수 : {{ accumulationList.find( acc => acc.title === item.title)?.accumulation * 365 }}
+                                </div>
+                        </q-card>
+                    </div>
                     
 
                 </div>
