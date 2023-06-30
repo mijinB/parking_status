@@ -49,7 +49,7 @@ onMounted(() => {
     <div class="layout">
         <div class="aside">
             <img src="@/assets/images/logo.png" />
-            <div class="text-h5 text-weight-bold text-dark q-mb-lg">Nuricon</div>
+            <div class="text-h5 q-mb-lg text-dark text-weight-bold">Nuricon</div>
             <div class="asideText">메뉴 1</div>
             <div class="asideText">메뉴 2</div>
         </div>
@@ -62,7 +62,7 @@ onMounted(() => {
                     <div class="row q-pt-lg">
                         <q-card flat bordered class="my-card q-ma-xl bg-warning" v-for="item in parkingList">
                             <q-card-section>
-                                <div class="text-h6 text-weight-bold text-dark">{{ item.title }}</div>
+                                <div class="text-h6 text-dark text-weight-bold">{{ item.title }}</div>
                             </q-card-section>
 
                             <q-separator inset />
@@ -85,7 +85,7 @@ onMounted(() => {
                                     </q-card>
                                 </div>
                             </q-card-section>
-                                <div class="text-subtitle text-center text-dark">
+                                <div class="text-subtitle text-dark text-center">
                                     1년 누적 주차대수 : {{ accumulationList.find( acc => acc.title === item.title)?.accumulation * 365 }}
                                 </div>
                         </q-card>
