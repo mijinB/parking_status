@@ -32,21 +32,23 @@ export default {
                             <div class="text-h6 text-weight-bold text-dark">주차장 1 </div>
                         </q-card-section>
 
-                        <q-separator dark inset />
+                        <q-separator inset />
 
                         <q-card-section class="text-subtitle2 text-dark">
                             담당 전화번호: 010-1234-5678<br />
-                            주소 : 전라북도 전주시<br />
+                            주소 : 대한민국<br />
                             (신주소 : ㅇㅇ로)<br />
-                            <div>
-                                <div>
+                            <div class="row justify-between">
+                                <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-white">
                                     주차 차량 수
-                                    <q-separator dark inset />
+                                    <q-separator />
                                     dd
-                                </div>
-                                <div>
-                                    잔여 공간 수
-                                </div>
+                                </q-card>
+                                <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-white">
+                                    주차 가능 수
+                                    <q-separator />
+                                    dd
+                                </q-card>
                             </div>
                         </q-card-section>
                     </q-card>
