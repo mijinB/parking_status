@@ -1,64 +1,55 @@
-<script>
+<script setup>
 import { date } from 'quasar';
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 
-export default {
-    setup() {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = today.getMonth() + 1;
-        const day = today.getDate();
+const today = new Date();
+const year = today.getFullYear();
+const month = today.getMonth() + 1;
+const day = today.getDate();
 
-        const parkingUrl = "https://jsonplaceholder.typicode.com/posts";
-        const yearUrl = "https://jsonplaceholder.typicode.com/posts";
-        let parkingList = ref([]);
-        let accumulationList = ref([]);
+const parkingUrl = "https://jsonplaceholder.typicode.com/posts";
+const yearUrl = "https://jsonplaceholder.typicode.com/posts";
+let parkingList = ref([]);
+let accumulationList = ref([]);
 
-        setInterval(() => {
-            axios
-                .get(parkingUrl)
-                .then(res => {
-                    const carParkList = res.data.filter(item => item.id <= 10);
-                    parkingList.value = carParkList.map(item => {
-                        return {
-                            title: `주차장 ${item.id}`,
-                            parkingtotalCnt: item.body.length,
-                            parkedCar: Math.floor(Math.random() * 100)
-                        }
-                    });
-                })
-                .catch(err => console(err));
-        }, 1000)
-
-        onMounted(() => {
-            axios
-                .get(yearUrl)
-                .then(res => {
-                    const yearParked = res.data.filter(item => item.id <= 10);
-                    accumulationList.value = yearParked.map(item => {
-                        return {
-                            title: `주차장 ${item.id}`,
-                            accumulation: item.body.length
-                        }
-                    });
-                })
-                .catch(err => console(err));
+setInterval(() => {
+    axios
+        .get(parkingUrl)
+        .then(res => {
+            const carParkList = res.data.filter(item => item.id <= 10);
+            parkingList.value = carParkList.map(item => {
+                return {
+                    title: `주차장 ${item.id}`,
+                    parkingtotalCnt: item.body.length,
+                    parkedCar: Math.floor(Math.random() * 100)
+                }
+            });
         })
+        .catch(err => console(err));
+}, 1000)
 
-        return {
-            today, year, month, day,
-            parkingList, accumulationList,
-        }
-    }
-}
+onMounted(() => {
+    axios
+        .get(yearUrl)
+        .then(res => {
+            const yearParked = res.data.filter(item => item.id <= 10);
+            accumulationList.value = yearParked.map(item => {
+                return {
+                    title: `주차장 ${item.id}`,
+                    accumulation: item.body.length
+                }
+            });
+        })
+        .catch(err => console(err));
+})
 </script>
 
 <template>
     <div class="layout">
         <div class="aside">
             <img src="@/assets/images/logo.png" />
-            <div class="text-h5 text-weight-bold text-dark q-mb-lg">Bmijin</div>
+            <div class="text-h5 text-weight-bold text-dark q-mb-lg">Nuricon</div>
             <div class="asideText">메뉴 1</div>
             <div class="asideText">메뉴 2</div>
         </div>
