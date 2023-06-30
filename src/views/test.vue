@@ -1,4 +1,8 @@
 <script>
+import { date } from 'quasar';
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+
 export default {
     setup() {
         const today = new Date();
@@ -6,8 +10,24 @@ export default {
         const month = today.getMonth() + 1;
         const day = today.getDate();
 
+        const url = "https://jsonplaceholder.typicode.com/posts";
+        let total = ref(0);
+        let parkedCar = ref(0);
+
+        setInterval(() => {
+            axios
+                .get(url)
+                .then(res => {
+                    const carPark = res.data.find(item => item.id === 2);
+                    total.value = carPark?.body.length;                         //주차장 면수
+                    parkedCar.value = Math.floor(Math.random() * 100);          //주차대수
+                })
+                .catch(err => console(err));
+        }, 1000)
+
         return {
             today, year, month, day,
+            total, parkedCar
         }
     }
 }
@@ -38,16 +58,17 @@ export default {
                             담당 전화번호: 010-1234-5678<br />
                             주소 : 대한민국<br />
                             (신주소 : ㅇㅇ로)<br />
+                            <div class="text-subtitle2 q-mt-sm text-dark text-weight-bold text-right">주차장 면수 : {{ total }}</div>
                             <div class="row justify-between">
-                                <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-white">
-                                    주차 차량 수
-                                    <q-separator />
-                                    dd
+                                <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-dark">
+                                    <div class="text-subtitle2 text-warning text-weight-bold">주차 차량 수</div>
+                                    <q-separator dark />
+                                    <div class="text-subtitle2 text-warning text-weight-bold text-right">{{ parkedCar }}</div>
                                 </q-card>
-                                <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-white">
-                                    주차 가능 수
-                                    <q-separator />
-                                    dd
+                                <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-dark">
+                                    <div class="text-subtitle2 text-warning text-weight-bold">주차 가능 수</div>
+                                    <q-separator dark />
+                                    <div class="text-subtitle2 text-warning text-weight-bold text-right">{{ total - parkedCar }}</div>
                                 </q-card>
                             </div>
                         </q-card-section>
