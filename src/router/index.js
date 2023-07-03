@@ -4,7 +4,7 @@ const routes = [
     {
         path: '/',
         name: 'home',
-        component: () => import('@/views/test.vue')
+        component: () => import('@/views/MainPage.vue')
     },    
     {
         // 없는 path 접근시 보여줄 페이지 정의

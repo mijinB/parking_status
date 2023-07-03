@@ -103,9 +103,7 @@ onMounted(() => {
                                     </q-card>
                                 </div>
                             </q-card-section>
-                                <div class="text-subtitle text-dark text-center">
-                                    1년 누적 주차대수 : ㅇㅇㅇㅇㅇ
-                                </div>
+                            <div class="text-subtitle text-dark text-center">1년 누적 주차대수 : ㅇㅇㅇㅇㅇ</div>
                         </q-card>
                     </div>
                     
