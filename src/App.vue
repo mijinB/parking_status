@@ -1,6 +1,5 @@
 <script setup>
 import { RouterView } from 'vue-router';
-// import { MainPage } from '@/views/MainPage.vue';
 </script>
 
 <template>
