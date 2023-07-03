@@ -13,7 +13,6 @@ const day = today.getDate();
 // let parkingList = ref([]);
 // let accumulationList = ref([]);
 
-//test
 const carParkUrl = "http://192.168.1.82:1880/config";
 let parkList = ref([]);
 
@@ -31,7 +30,6 @@ onMounted(() => {
         })
         .catch(err => console(err));
 })
-//test-end
 
 // setInterval(() => {
 //     axios
