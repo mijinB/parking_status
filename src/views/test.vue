@@ -68,7 +68,7 @@ onMounted(() => {
     <div class="layout">
         <div class="aside">
             <img src="@/assets/images/logo.png" />
-            <div class="text-h5 q-mb-lg text-dark text-weight-bold">Nuricon</div>
+            <div class="text-h5 q-mb-lg text-dark text-weight-bold">mijinB</div>
             <div class="asideText">버튼</div>
         </div>
         <div class="main">
