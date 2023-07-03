@@ -8,42 +8,62 @@ const year = today.getFullYear();
 const month = today.getMonth() + 1;
 const day = today.getDate();
 
-const parkingUrl = "https://jsonplaceholder.typicode.com/posts";
-const yearUrl = "https://jsonplaceholder.typicode.com/posts";
-let parkingList = ref([]);
-let accumulationList = ref([]);
+// const parkingUrl = "https://jsonplaceholder.typicode.com/posts";
+// const yearUrl = "https://jsonplaceholder.typicode.com/posts";
+// let parkingList = ref([]);
+// let accumulationList = ref([]);
 
-setInterval(() => {
-    axios
-        .get(parkingUrl)
-        .then(res => {
-            const carParkList = res.data.filter(item => item.id <= 10);
-            parkingList.value = carParkList.map(item => {
-                return {
-                    id: item.id,
-                    title: `주차장 ${item.id}`,
-                    parkingtotalCnt: item.body.length,
-                    parkedCar: Math.floor(Math.random() * 100)
-                }
-            });
-        })
-        .catch(err => console(err));
-}, 1000)
+//test
+const carParkUrl = "http://192.168.1.82:1880/config";
+let parkList = ref([]);
 
 onMounted(() => {
     axios
-        .get(yearUrl)
+        .get(carParkUrl)
         .then(res => {
-            const yearParked = res.data.filter(item => item.id <= 10);
-            accumulationList.value = yearParked.map(item => {
-                return {
-                    title: `주차장 ${item.id}`,
-                    accumulation: item.body.length
-                }
-            });
+            parkList.value = res.data.edge[0].parking_config[0].area
+                .map(item => {
+                    return {
+                        id: item.area_id,
+                        title: item.area_name
+                    }
+                })
         })
         .catch(err => console(err));
 })
+//test-end
+
+// setInterval(() => {
+//     axios
+//         .get(parkingUrl)
+//         .then(res => {
+//             const carParkList = res.data.filter(item => item.id <= 10);
+//             parkingList.value = carParkList.map(item => {
+//                 return {
+//                     id: item.id,
+//                     title: `주차장 ${item.id}`,
+//                     parkingtotalCnt: item.body.length,
+//                     parkedCar: Math.floor(Math.random() * 100)
+//                 }
+//             });
+//         })
+//         .catch(err => console(err));
+// }, 1000)
+
+// onMounted(() => {
+//     axios
+//         .get(yearUrl)
+//         .then(res => {
+//             const yearParked = res.data.filter(item => item.id <= 10);
+//             accumulationList.value = yearParked.map(item => {
+//                 return {
+//                     title: `주차장 ${item.id}`,
+//                     accumulation: item.body.length
+//                 }
+//             });
+//         })
+//         .catch(err => console(err));
+// })
 </script>
 
 <template>
@@ -51,8 +71,7 @@ onMounted(() => {
         <div class="aside">
             <img src="@/assets/images/logo.png" />
             <div class="text-h5 q-mb-lg text-dark text-weight-bold">Nuricon</div>
-            <div class="asideText">메뉴 1</div>
-            <div class="asideText">메뉴 2</div>
+            <div class="asideText">버튼</div>
         </div>
         <div class="main">
             <div>
@@ -61,7 +80,7 @@ onMounted(() => {
                     <!--카드-->
 
                     <div class="row q-pt-lg">
-                        <q-card flat bordered class="my-card q-ma-xl bg-warning" v-for="item in parkingList" :key="item.id">
+                        <q-card flat bordered class="my-card q-ma-xl bg-warning" v-for="item in parkList" :key="item.id">
                             <q-card-section>
                                 <div class="text-h6 text-dark text-weight-bold">{{ item.title }}</div>
                             </q-card-section>
@@ -72,22 +91,22 @@ onMounted(() => {
                                 담당 전화번호: 010-1234-5678<br />
                                 주소 : 대한민국<br />
                                 (신주소 : ㅇㅇ로)<br />
-                                <div class="text-subtitle2 q-mt-sm text-dark text-weight-bold text-right">주차면수 : {{ item.parkingtotalCnt }}</div>
+                                <div class="text-subtitle2 q-mt-sm text-dark text-weight-bold text-right">주차면수 : ㅇㅇㅇ</div>
                                 <div class="row justify-between">
                                     <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-dark">
                                         <div class="text-subtitle2 text-warning text-weight-bold">주차 차량 수</div>
                                         <q-separator dark />
-                                        <div class="text-subtitle2 text-warning text-weight-bold text-right">{{ item.parkedCar }}</div>
+                                        <div class="text-subtitle2 text-warning text-weight-bold text-right">ㅇㅇ</div>
                                     </q-card>
                                     <q-card flat bordered class="my-card q-pa-xs q-mt-xs bg-dark">
                                         <div class="text-subtitle2 text-warning text-weight-bold">주차 가능 수</div>
                                         <q-separator dark />
-                                        <div class="text-subtitle2 text-warning text-weight-bold text-right">{{ item.parkingtotalCnt - item.parkedCar }}</div>
+                                        <div class="text-subtitle2 text-warning text-weight-bold text-right">ㅇㅇㅇ</div>
                                     </q-card>
                                 </div>
                             </q-card-section>
                                 <div class="text-subtitle text-dark text-center">
-                                    1년 누적 주차대수 : {{ accumulationList.find( acc => acc.title === item.title)?.accumulation * 365 }}
+                                    1년 누적 주차대수 : ㅇㅇㅇㅇㅇ
                                 </div>
                         </q-card>
                     </div>
