@@ -20,6 +20,7 @@ setInterval(() => {
             const carParkList = res.data.filter(item => item.id <= 10);
             parkingList.value = carParkList.map(item => {
                 return {
+                    id: item.id,
                     title: `주차장 ${item.id}`,
                     parkingtotalCnt: item.body.length,
                     parkedCar: Math.floor(Math.random() * 100)
@@ -60,7 +61,7 @@ onMounted(() => {
                     <!--카드-->
 
                     <div class="row q-pt-lg">
-                        <q-card flat bordered class="my-card q-ma-xl bg-warning" v-for="item in parkingList">
+                        <q-card flat bordered class="my-card q-ma-xl bg-warning" v-for="item in parkingList" :key="item.id">
                             <q-card-section>
                                 <div class="text-h6 text-dark text-weight-bold">{{ item.title }}</div>
                             </q-card-section>
