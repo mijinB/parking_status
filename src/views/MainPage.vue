@@ -31,12 +31,26 @@ onMounted(() => {
           })
     })
     .catch(err => console(err));
+    
   ws.value = new WebSocket("ws://192.168.1.82:1880/ws/average");
+  
   ws.value.onopen = () => {
     connected.value = true;
   }
+
+  ws.value.onclose = () => {
+    console.log("연결 끊기");
+    connected.value = false;
+    ws.value = null;
+  }
+
+  ws.value.onmessage = (msg) => {
+    console.log('recv-msg', msg.data.value);
+  }
   console.log(ws.value);
 })
+
+const onClose = () => ws.value.close();
 
 // const ws = ref(null);
 // const connected = ref(false);
@@ -67,10 +81,12 @@ onMounted(() => {
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" class="bg-warning">
         <div class="q-mt-lg text-center">
             <img src="@/assets/images/logo.png" />
-            <div class="text-h5 q-mb-xl text-dark text-weight-bold">mijinB</div>
+            <div class="text-h5 q-mb-xl text-dark text-weight-bold">주차장 정보</div>
         </div>
         <!--버튼 컴포넌트-->
         <ButtonComp :buttonItems="parkList" @parkTitle="(res) => choiceParkTitle = res" />
+        <!--Test를 위한 임시 버튼-->
+        <q-btn @click="onClose" color="dark" label="연결 끊기" />
     </q-drawer>
 
     <q-page-container class="col bg-dark">
