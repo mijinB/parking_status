@@ -15,20 +15,50 @@ const carParkUrl = "http://192.168.1.82:1880/config";
 let parkList = ref([]);
 let choiceParkTitle = ref("");
 
+const ws = ref(null);
+const connected = ref(false);
+
 onMounted(() => {
-    axios
-        .get(carParkUrl)
-        .then(res => {
-          parkList.value = res.data.edge[0].parking_config[0].area
-              .map(item => {
-                  return {
-                      id: item.area_id,
-                      title: item.area_name
-                  }
-              })
-        })
-        .catch(err => console(err));
+  axios
+    .get(carParkUrl)
+    .then(res => {
+      parkList.value = res.data.edge[0].parking_config[0].area
+          .map(item => {
+              return {
+                  id: item.area_id,
+                  title: item.area_name
+              }
+          })
+    })
+    .catch(err => console(err));
+  ws.value = new WebSocket("ws://192.168.1.82:1880/ws/average");
+  ws.value.onopen = () => {
+    connected.value = true;
+  }
+  console.log(ws.value);
 })
+
+// const ws = ref(null);
+// const connected = ref(false);
+
+// const onOpen = () => {
+//   if(!connected.value) {
+//     ws.value = new WebSocket("ws://192.168.1.82:1880/ws/average");
+
+//     ws.value.onOpen = () => {
+//       connected.value = true;
+//       console.log(ws.value);
+//     }
+
+//     ws.value.onclose = () => {
+//       console.log("연결 끊기");
+//       connected.value = false;
+//       ws.value = null;
+//     }
+//   }
+// }
+
+// const onClose = () => ws.value.close();
 </script>
 
 <template>
