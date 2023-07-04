@@ -31,7 +31,7 @@ let parkList = ref([]);
 //         })
 //         .catch(err => console(err));
 // })
-const titleValue = ref('');
+let titleValue = ref('');
 
 onMounted(() => {
     axios
@@ -52,7 +52,7 @@ onMounted(() => {
             <div class="text-h5 q-mb-xl text-dark text-weight-bold">mijinB</div>
         </div>
         <!--버튼 컴포넌트-->
-        <ButtonComp />
+        <ButtonComp :buttonItem="titleValue" />
     </q-drawer>
 
     <q-page-container class="col bg-dark">
