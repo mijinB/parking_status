@@ -31,35 +31,11 @@ onMounted(() => {
           })
     })
     .catch(err => console(err));
-    
-  // ws.value = new WebSocket("ws://192.168.1.82:1880/ws/average");
-  
-  // ws.value.onopen = () => {
-  //   connected.value = true;
-  // }
-
-  // ws.value.onclose = () => {
-  //   console.log("연결 끊기");
-  //   connected.value = false;
-  //   ws.value = null;
-  // }
-
-  // ws.value.onmessage = (msg) => {
-  //   wsList.value = JSON.parse(msg.data).value.split(',');
-  //   // wsIdList.value = JSON.parse(msg.data).value.split(',').map(item => item.split('/')[0])[0];
-  //   //wsList.value = msgList.filter(item => item.includes(parkList.value[6].id));
-  //   //console.log(wsIdList.value);
-  // }
-  // wsIdList.value = wsList.value.map(item => item.split('/')[0])[0];
-  // console.log(wsIdList.value);
 })
-
-// const onClose = () => ws.value.close();
 
 const ws = ref(null);
 const connected = ref(false);
 const wsList = ref([]);
-const wsTestList = ref([]);
 
 const onOpen = () => {
   if(!connected.value) {
@@ -69,44 +45,30 @@ const onOpen = () => {
       connected.value = true;
     }
 
-    ws.value.onmessage = (msg) => {
-      wsList.value.push(JSON.parse(msg.data).value);
-      console.log(wsList.value);
-    }
+    ws.value.onmessage = (msg) => {   
+      const getSocketInfo = JSON.parse(msg.data).value.split(",");
+      let setWsList = [];
+
+      setWsList = getSocketInfo.filter(item => {
+        const item_id = item.split('/')[0];
+        return Number(item_id) === selectPark.value.id;
+      })
+      
+      if (setWsList.length > 0) {
+        wsList.value = setWsList;
+      }
+  }
 
     ws.value.onclose = () => {
       console.log("연결 끊기");
       connected.value = false;
       ws.value = null;
+      wsList.value = [];
     }
   }
 }
 
 const onClose = () => ws.value.close();
-
-//-------------------------------------------------------------------------------------------------
-
-// const ws = ref(null);
-// const connected = ref(false);
-
-// const onOpen = () => {
-//   if(!connected.value) {
-//     ws.value = new WebSocket("ws://192.168.1.82:1880/ws/average");
-
-//     ws.value.onOpen = () => {
-//       connected.value = true;
-//       console.log(ws.value);
-//     }
-
-//     ws.value.onclose = () => {
-//       console.log("연결 끊기");
-//       connected.value = false;
-//       ws.value = null;
-//     }
-//   }
-// }
-
-// const onClose = () => ws.value.close();
 </script>
 
 <template>
