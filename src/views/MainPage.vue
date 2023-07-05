@@ -18,6 +18,10 @@ const selectPark = ref({
   title: null
 })
 
+const ws = ref(null);
+const connected = ref(false);
+const wsList = ref([]);
+
 onMounted(() => {
   axios
     .get(carParkUrl)
@@ -32,10 +36,6 @@ onMounted(() => {
     })
     .catch(err => console(err));
 })
-
-const ws = ref(null);
-const connected = ref(false);
-const wsList = ref([]);
 
 const onOpen = () => {
   if(!connected.value) {
@@ -98,6 +98,7 @@ const onClose = () => ws.value.close();
           <button @click="onOpen">연결하기</button>
           <p>WebSocket connecting...</p>
         </div>
+        <!--Test를 위한 임시 버튼 END-->
         
     </q-drawer>
 
