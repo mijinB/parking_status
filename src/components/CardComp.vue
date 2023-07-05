@@ -1,5 +1,6 @@
 <script setup>
 const props = defineProps({
+    parkId: Number,
     parkName: String
 })
 </script>
@@ -9,6 +10,8 @@ const props = defineProps({
         <q-card flat bordered class="my-card q-ma-xl bg-warning">
             <q-card-section>
                 <div class="text-h6 text-dark text-weight-bold">{{ props.parkName }}</div>
+                <!--test를 위해 임시추가-->
+                <div>id : {{ props.parkId }}</div>
             </q-card-section>
 
             <q-separator inset />

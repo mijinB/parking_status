@@ -13,7 +13,10 @@ const day = today.getDate();
 
 const carParkUrl = "http://192.168.1.82:1880/config";
 const parkList = ref([]);
-const choiceParkTitle = ref("");
+const selectPark = ref({
+  id: null,
+  title: null
+})
 
 onMounted(() => {
   axios
@@ -56,7 +59,7 @@ onMounted(() => {
 const ws = ref(null);
 const connected = ref(false);
 const wsList = ref([]);
-const wsIdList = ref([]);
+const wsTestList = ref([]);
 
 const onOpen = () => {
   if(!connected.value) {
@@ -64,11 +67,11 @@ const onOpen = () => {
 
     ws.value.onopen = () => {
       connected.value = true;
-      console.log(ws.value);
     }
 
     ws.value.onmessage = (msg) => {
-      wsList.value.push(msg.data);
+      wsList.value.push(JSON.parse(msg.data).value);
+      console.log(wsList.value);
     }
 
     ws.value.onclose = () => {
@@ -115,8 +118,10 @@ const onClose = () => ws.value.close();
             <div class="text-h5 q-mb-xl text-dark text-weight-bold">주차장 정보</div>
         </div>
         <!--버튼 컴포넌트-->
-        <ButtonComp :buttonItems="parkList" @parkTitle="(res) => choiceParkTitle = res" />
-          
+        <ButtonComp :buttonItems="parkList" @choicePark="(res) => selectPark = res" />
+        <!--test를 위해 임시추가-->
+        <div>{{ selectPark }}</div>
+
         <!--Test를 위한 임시 버튼-->
         <div v-if="connected">
           <p>WebSocket connected!</p>
@@ -138,7 +143,7 @@ const onClose = () => ws.value.close();
         <!--오늘 날짜-->
         <div class="text-h5 q-pl-xl q-pt-xl text-weight-bold text-white">{{ year }}년 {{ month }}월 {{ day }}일</div>
         <!--카드 컴포넌트-->
-        <CardComp :parkName="choiceParkTitle" />
+        <CardComp :parkId="selectPark.id" :parkName="selectPark.title" />
     </q-page-container>
 
   </q-layout>

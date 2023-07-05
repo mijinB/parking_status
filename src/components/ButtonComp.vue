@@ -1,20 +1,25 @@
 <script setup>
 import { ref } from 'vue';
-const choiceParkTitle = ref("");
+const choicePark = ref({
+  id: null,
+  title: null
+});
 const buttonLabel = ref("주차장을 선택해주세요.");
 
 const props = defineProps({
     buttonItems: Array
 })
 
-const emit = defineEmits(['parkTitle']);
+const emit = defineEmits(['choicePark']);
 
-const choicePark = (title) => {
-    choiceParkTitle.value = title;
-    emit('parkTitle', choiceParkTitle.value);
+const getChoicePark = (itemId, itemTitle) => {
+  choicePark.value = {
+    id: itemId,
+    title: itemTitle
+  };
+    emit('choicePark', choicePark.value);
 
-    buttonLabel.value = title;
-    console.log(buttonLabel.value);
+    buttonLabel.value = itemTitle;
 }
 </script>
 
@@ -26,7 +31,7 @@ const choicePark = (title) => {
         :label="buttonLabel"
       >
         <q-list class="window-center">
-          <q-item clickable v-close-popup class="bg-dark" v-for="item in props.buttonItems" :key="item.id" @click="choicePark(item.title)">
+          <q-item clickable v-close-popup class="bg-dark" v-for="item in props.buttonItems" :key="item.id" @click="getChoicePark(item.id, item.title)">
 
             <q-item-section>
               <q-item-label class="text-white">{{ item.title }}</q-item-label>
