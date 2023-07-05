@@ -12,11 +12,8 @@ const month = today.getMonth() + 1;
 const day = today.getDate();
 
 const carParkUrl = "http://192.168.1.82:1880/config";
-let parkList = ref([]);
-let choiceParkTitle = ref("");
-
-const ws = ref(null);
-const connected = ref(false);
+const parkList = ref([]);
+const choiceParkTitle = ref("");
 
 onMounted(() => {
   axios
@@ -32,25 +29,59 @@ onMounted(() => {
     })
     .catch(err => console(err));
     
-  ws.value = new WebSocket("ws://192.168.1.82:1880/ws/average");
+  // ws.value = new WebSocket("ws://192.168.1.82:1880/ws/average");
   
-  ws.value.onopen = () => {
-    connected.value = true;
-  }
+  // ws.value.onopen = () => {
+  //   connected.value = true;
+  // }
 
-  ws.value.onclose = () => {
-    console.log("연결 끊기");
-    connected.value = false;
-    ws.value = null;
-  }
+  // ws.value.onclose = () => {
+  //   console.log("연결 끊기");
+  //   connected.value = false;
+  //   ws.value = null;
+  // }
 
-  ws.value.onmessage = (msg) => {
-    console.log('recv-msg', msg.data.value);
-  }
-  console.log(ws.value);
+  // ws.value.onmessage = (msg) => {
+  //   wsList.value = JSON.parse(msg.data).value.split(',');
+  //   // wsIdList.value = JSON.parse(msg.data).value.split(',').map(item => item.split('/')[0])[0];
+  //   //wsList.value = msgList.filter(item => item.includes(parkList.value[6].id));
+  //   //console.log(wsIdList.value);
+  // }
+  // wsIdList.value = wsList.value.map(item => item.split('/')[0])[0];
+  // console.log(wsIdList.value);
 })
 
+// const onClose = () => ws.value.close();
+
+const ws = ref(null);
+const connected = ref(false);
+const wsList = ref([]);
+const wsIdList = ref([]);
+
+const onOpen = () => {
+  if(!connected.value) {
+    ws.value = new WebSocket("ws://192.168.1.82:1880/ws/average");
+
+    ws.value.onopen = () => {
+      connected.value = true;
+      console.log(ws.value);
+    }
+
+    ws.value.onmessage = (msg) => {
+      wsList.value.push(msg.data);
+    }
+
+    ws.value.onclose = () => {
+      console.log("연결 끊기");
+      connected.value = false;
+      ws.value = null;
+    }
+  }
+}
+
 const onClose = () => ws.value.close();
+
+//-------------------------------------------------------------------------------------------------
 
 // const ws = ref(null);
 // const connected = ref(false);
@@ -85,8 +116,22 @@ const onClose = () => ws.value.close();
         </div>
         <!--버튼 컴포넌트-->
         <ButtonComp :buttonItems="parkList" @parkTitle="(res) => choiceParkTitle = res" />
+          
         <!--Test를 위한 임시 버튼-->
-        <q-btn @click="onClose" color="dark" label="연결 끊기" />
+        <div v-if="connected">
+          <p>WebSocket connected!</p>
+          <button @click="onClose">연결끊기</button>
+          <ul>
+            <li v-for="(item, index) in wsList" :key="index">
+              {{ item }}
+            </li>
+          </ul>
+        </div>
+        <div v-else>
+          <button @click="onOpen">연결하기</button>
+          <p>WebSocket connecting...</p>
+        </div>
+        
     </q-drawer>
 
     <q-page-container class="col bg-dark">

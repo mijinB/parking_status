@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-let choiceParkTitle = ref("");
-let buttonLabel = ref("주차장을 선택해주세요.");
+const choiceParkTitle = ref("");
+const buttonLabel = ref("주차장을 선택해주세요.");
 
 const props = defineProps({
     buttonItems: Array
