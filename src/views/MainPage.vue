@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import axios from 'axios';
 import CardComp from '@/components/CardComp.vue';
 import ButtonComp from '@/components/ButtonComp.vue';
@@ -19,7 +19,6 @@ const selectPark = ref({
 })
 
 const ws = ref(null);
-const connected = ref(false);
 const wsList = ref({
   data: [],
   total: null,
@@ -42,12 +41,21 @@ onMounted(() => {
     .catch(err => console(err));
 })
 
+watch(selectPark, (newSelect, oldSelect) => {
+  if(oldSelect !== newSelect) {
+    wsList.value.data = [];
+    wsList.value.total = 0;
+    wsList.value.fullCnt = 0;
+    wsList.value.emptyCnt = 0;
+  }
+});
+
 const onOpen = () => {
-  if(!connected.value) {
+  if(ws.value == null) {
     ws.value = new WebSocket("ws://192.168.1.82:1880/ws/average");
 
     ws.value.onopen = () => {
-      connected.value = true;
+      console.log("연결");
     }
 
     ws.value.onmessage = (msg) => {   
@@ -55,8 +63,8 @@ const onOpen = () => {
       let setWsList = [];
 
       setWsList = getSocketInfo.filter(item => {
-        const item_id = item.split('/')[0];
-        return Number(item_id) === selectPark.value.id;
+        const item_id = Number(item.split('/')[0]);
+        return item_id === selectPark.value.id;
       })
       
       if (setWsList.length > 0) {
@@ -72,7 +80,6 @@ const onOpen = () => {
 
     ws.value.onclose = () => {
       console.log("연결 끊기");
-      connected.value = false;
       ws.value = null;
       wsList.value = [];
     }
@@ -91,25 +98,18 @@ const onClose = () => ws.value.close();
             <div class="text-h5 q-mb-xl text-dark text-weight-bold">주차장 정보</div>
         </div>
         <!--버튼 컴포넌트-->
-        <ButtonComp :buttonItems="parkList" @choicePark="(res) => selectPark = res" />
+        <ButtonComp :buttonItems="parkList" @choicePark="(res) => selectPark = res" @click="onOpen" />
         <!--test를 위해 임시추가-->
         <div>{{ selectPark }}</div>
         <div>주차면수 : {{ wsList.total }} 만차면수 : {{ wsList.fullCnt }} 공석면수 : {{ wsList.emptyCnt }}</div>
 
         <!--Test를 위한 임시 버튼-->
-        <div v-if="connected">
-          <p>WebSocket connected!</p>
           <button @click="onClose">연결끊기</button>
           <ul>
             <li v-for="(item, index) in wsList.data" :key="index">
               {{ item }}
             </li>
           </ul>
-        </div>
-        <div v-else>
-          <button @click="onOpen">연결하기</button>
-          <p>WebSocket connecting...</p>
-        </div>
         <!--Test를 위한 임시 버튼 END-->
         
     </q-drawer>

@@ -11,7 +11,7 @@ const props = defineProps({
 
 <template>
     <div class="float-left">
-        <q-card flat bordered class="my-card q-ma-xl bg-warning">
+        <q-card flat bordered class="my-card q-ma-xl bg-warning" style="width: 50vh;">
             <q-card-section>
                 <div class="text-h6 text-dark text-weight-bold">{{ props.parkName }}</div>
                 <!--test를 위해 임시추가-->
