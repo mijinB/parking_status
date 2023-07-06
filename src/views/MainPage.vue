@@ -20,7 +20,12 @@ const selectPark = ref({
 
 const ws = ref(null);
 const connected = ref(false);
-const wsList = ref([]);
+const wsList = ref({
+  data: [],
+  total: null,
+  fullCnt: null,
+  emptyCnt: null
+});
 
 onMounted(() => {
   axios
@@ -55,9 +60,15 @@ const onOpen = () => {
       })
       
       if (setWsList.length > 0) {
-        wsList.value = setWsList;
+        wsList.value.data = setWsList;
+        wsList.value.total = setWsList.length;
+
+        const fullCntList = setWsList.filter(item => item.split(':')[1] === '1');
+        
+        wsList.value.fullCnt = fullCntList.length;
+        wsList.value.emptyCnt = wsList.value.total - wsList.value.fullCnt;
       }
-  }
+    }
 
     ws.value.onclose = () => {
       console.log("연결 끊기");
@@ -83,13 +94,14 @@ const onClose = () => ws.value.close();
         <ButtonComp :buttonItems="parkList" @choicePark="(res) => selectPark = res" />
         <!--test를 위해 임시추가-->
         <div>{{ selectPark }}</div>
+        <div>주차면수 : {{ wsList.total }} 만차면수 : {{ wsList.fullCnt }} 공석면수 : {{ wsList.emptyCnt }}</div>
 
         <!--Test를 위한 임시 버튼-->
         <div v-if="connected">
           <p>WebSocket connected!</p>
           <button @click="onClose">연결끊기</button>
           <ul>
-            <li v-for="(item, index) in wsList" :key="index">
+            <li v-for="(item, index) in wsList.data" :key="index">
               {{ item }}
             </li>
           </ul>
@@ -106,7 +118,14 @@ const onClose = () => ws.value.close();
         <!--오늘 날짜-->
         <div class="text-h5 q-pl-xl q-pt-xl text-weight-bold text-white">{{ year }}년 {{ month }}월 {{ day }}일</div>
         <!--카드 컴포넌트-->
-        <CardComp :parkId="selectPark.id" :parkName="selectPark.title" />
+        <CardComp
+          :parkId="selectPark.id"
+          :parkName="selectPark.title"
+          :stateData="wsList.data"
+          :stateTotal="wsList.total"
+          :stateFullCnt="wsList.fullCnt"
+          :stateEmptyCnt="wsList.emptyCnt"
+        />
     </q-page-container>
 
   </q-layout>
