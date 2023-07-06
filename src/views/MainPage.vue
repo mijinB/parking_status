@@ -15,15 +15,15 @@ const carParkUrl = "http://192.168.1.82:1880/config";
 const parkList = ref([]);
 const selectPark = ref({
   id: null,
-  title: null
+  title: "주차장을 선택해주세요."
 })
 
 const ws = ref(null);
 const wsList = ref({
   data: [],
-  total: null,
-  fullCnt: null,
-  emptyCnt: null
+  total: 0,
+  fullCnt: 0,
+  emptyCnt: 0
 });
 
 onMounted(() => {
@@ -78,15 +78,15 @@ const onOpen = () => {
       }
     }
 
-    ws.value.onclose = () => {
-      console.log("연결 끊기");
-      ws.value = null;
-      wsList.value = [];
-    }
+    // ws.value.onclose = () => {
+    //   console.log("연결 끊기");
+    //   ws.value = null;
+    //   wsList.value = [];
+    // }
   }
 }
 
-const onClose = () => ws.value.close();
+// const onClose = () => ws.value.close();
 </script>
 
 <template>
@@ -100,16 +100,16 @@ const onClose = () => ws.value.close();
         <!--버튼 컴포넌트-->
         <ButtonComp :buttonItems="parkList" @choicePark="(res) => selectPark = res" @click="onOpen" />
         <!--test를 위해 임시추가-->
-        <div>{{ selectPark }}</div>
-        <div>주차면수 : {{ wsList.total }} 만차면수 : {{ wsList.fullCnt }} 공석면수 : {{ wsList.emptyCnt }}</div>
+        <!-- <div>{{ selectPark }}</div>
+        <div>주차면수 : {{ wsList.total }} 만차면수 : {{ wsList.fullCnt }} 공석면수 : {{ wsList.emptyCnt }}</div> -->
 
         <!--Test를 위한 임시 버튼-->
-          <button @click="onClose">연결끊기</button>
+          <!-- <button @click="onClose">연결끊기</button>
           <ul>
             <li v-for="(item, index) in wsList.data" :key="index">
               {{ item }}
             </li>
-          </ul>
+          </ul> -->
         <!--Test를 위한 임시 버튼 END-->
         
     </q-drawer>
