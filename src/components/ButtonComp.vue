@@ -30,7 +30,7 @@ const getChoicePark = (itemId, itemTitle) => {
         rounded
         :label="buttonLabel"
       >
-        <q-list class="window-center">
+        <q-list>
           <q-item clickable v-close-popup class="bg-dark" v-for="item in props.buttonItems" :key="item.id" @click="getChoicePark(item.id, item.title)">
 
             <q-item-section>

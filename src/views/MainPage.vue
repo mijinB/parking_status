@@ -26,6 +26,10 @@ const wsList = ref({
   emptyCnt: 0
 });
 
+const toggleLeftDrawer = () => {
+        leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
 onMounted(() => {
   axios
     .get(carParkUrl)
@@ -115,8 +119,9 @@ const onOpen = () => {
     </q-drawer>
 
     <q-page-container class="col bg-dark">
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" class="q-ma-sm text-white" />
         <!--오늘 날짜-->
-        <div class="text-h5 q-pl-xl q-pt-xl text-weight-bold text-white">{{ year }}년 {{ month }}월 {{ day }}일</div>
+        <div class="text-h5 q-pl-xl q-pt-sm text-weight-bold text-white">{{ year }}년 {{ month }}월 {{ day }}일</div>
         <!--카드 컴포넌트-->
         <CardComp
           :parkId="selectPark.id"
